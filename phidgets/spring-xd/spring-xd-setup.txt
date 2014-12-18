@@ -1,0 +1,2 @@
+stream create --name phidget-stream --definition "http --port=9020 | hdfs --rollover=10000" --deploy
+stream create --name phidget-stream-tap --definition "tap:stream:phidget-stream > transform --script=spatial-transform.groovy | rabbit  --exchange=amq.topic" --deploy
