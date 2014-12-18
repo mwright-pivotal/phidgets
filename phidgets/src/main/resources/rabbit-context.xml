@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:cloud="http://www.springframework.org/schema/cloud"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.4.xsd
+		http://www.springframework.org/schema/cloud http://www.springframework.org/schema/cloud/spring-cloud.xsd">
+
+	<rabbit:connection-factory id="rabbitConnectionFactory"/>
+	<rabbit:template id="amqpTemplate" connection-factory="rabbitConnectionFactory"
+		exchange="phidget-stream-tap" routing-key="phidget-stream-tap" channel-transacted="true" />
+	<rabbit:admin connection-factory="rabbitConnectionFactory" />
+
+	<rabbit:topic-exchange name="phidget-stream-tap" />
+
+
+</beans>
