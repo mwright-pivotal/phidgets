@@ -66,3 +66,21 @@ DISTRIBUTED RANDOMLY;
 INSERT INTO phidgets.spatial_magnetic
 SELECT serialnum,rcvts,x,y,z FROM phidgets.ext_csv_phidget_spatial
 WHERE type = 'magnetic';
+
+DROP TABLE IF EXISTS phidgets.spatial_gps;
+
+CREATE TABLE phidgets.spatial_gps (
+	serialnum varchar(8),
+	rcvts	timestamp,
+	lat double precision ,
+	long double precision ,
+	altitude double precision
+	)
+WITH (APPENDONLY=true, ORIENTATION=Parquet, 
+  OIDS=FALSE
+)
+DISTRIBUTED RANDOMLY;
+
+INSERT INTO phidgets.spatial_gps
+SELECT serialnum,rcvts,x,y,z FROM phidgets.ext_csv_phidget_spatial
+WHERE type = 'gps';
