@@ -1,0 +1,280 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Realtime Spatial Line Chart</title>
+		<script src="../../js/Chart.js"></script>
+		<link rel="stylesheet" href="../../static/css/bootstrap.min.css"/>
+    	<link rel="stylesheet" href="../../static/css/bootstrap-theme.css"/>
+    	<link rel="stylesheet" href="../../static/css/application.css"/>
+
+    	<script src="../../js/sockjs-0.3.4.js"></script>
+    	<script src="../../js/stomp.js"></script>
+    	<script src="../../js/jquery-1.7.2.js"></script>
+    	<script src="../../js/moment.min.js"></script>
+    	<script src="../../js/Chart.js"></script>
+	</head>
+	<body>
+		<div style="width:100%">
+			<table>
+			<tr>
+			<td>
+			<div>
+				<br>
+				<canvas id="canvas-accel" height="450" width="600"></canvas>
+			</div>
+			<div id="accelLegendDiv"></div>
+			</td>
+			<td>
+			<div>
+				<canvas id="canvas-angular" height="450" width="600"></canvas>
+			</div>
+			<div id="angularLegendDiv"></div>
+			</td>
+			</tr>
+			<tr>
+			<td>
+			<div>
+				<canvas id="canvas-magnetic" height="450" width="600"></canvas>
+			</div>
+			<div id="magneticLegendDiv"></div>
+			</td>
+			<td>
+			<div id="infoDiv">
+			<img alt="" src="http://www.phidgets.com/wiki/images/thumb/8/8a/1041_0_Axis_Diagram.jpg/400px-1041_0_Axis_Diagram.jpg"/>
+			<img alt="" src="../../img/1.jpg"/>
+			</div>
+			</td></tr>
+			</table>
+		</div>
+
+
+	<script>
+		var rsf = function(){ return (Math.random()*3)};
+		var accelChartData = {
+			labels : ["ts1","ts2","ts3","ts4","ts5","ts6","ts7","ts1","ts2","ts3","ts4","ts5","ts6","ts7"],
+			datasets : [
+				{
+					label: "X axis (g)",
+					fillColor : "rgba(220,220,220,0.2)",
+					strokeColor : "rgba(212,242,182,1)",
+					pointColor : "rgba(220,220,220,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(220,220,220,1)",
+					data : [rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf()]
+				},
+				{
+					label: "Y axis (g)",
+					fillColor : "rgba(151,187,205,0.2)",
+					strokeColor : "rgba(209,84,17,1)",
+					pointColor : "rgba(151,187,205,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(151,187,205,1)",
+					data : [rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf()]
+				},
+				{
+					label: "Z axis (g)",
+					fillColor : "rgba(151,187,205,0.2)",
+					strokeColor : "rgba(151,187,205,1)",
+					pointColor : "rgba(151,187,205,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(151,187,205,1)",
+					data : [rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf()]
+				}
+			]
+		}
+		var angularChartData = {
+					labels : ["ts1","ts2","ts3","ts4","ts5","ts6","ts7","ts1","ts2","ts3","ts4","ts5","ts6","ts7"],
+					datasets : [
+						{
+							label: "X axis (degrees/s)",
+							fillColor : "rgba(220,220,220,0.2)",
+							strokeColor : "rgba(212,242,182,1)",
+							pointColor : "rgba(220,220,220,1)",
+							pointStrokeColor : "#fff",
+							pointHighlightFill : "#fff",
+							pointHighlightStroke : "rgba(220,220,220,1)",
+							data : [rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf()]
+						},
+						{
+							label: "Y axis (degrees/s)",
+							fillColor : "rgba(151,187,205,0.2)",
+							strokeColor : "rgba(209,84,17,1)",
+							pointColor : "rgba(151,187,205,1)",
+							pointStrokeColor : "#fff",
+							pointHighlightFill : "#fff",
+							pointHighlightStroke : "rgba(151,187,205,1)",
+							data : [rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf()]
+						},
+						{
+							label: "Z axis (degrees/s)",
+							fillColor : "rgba(151,187,205,0.2)",
+							strokeColor : "rgba(151,187,205,1)",
+							pointColor : "rgba(151,187,205,1)",
+							pointStrokeColor : "#fff",
+							pointHighlightFill : "#fff",
+							pointHighlightStroke : "rgba(151,187,205,1)",
+							data : [rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf()]
+						}
+					]
+		}
+		
+		var magneticChartData = {
+				labels : ["ts1","ts2","ts3","ts4","ts5","ts6","ts7","ts1","ts2","ts3","ts4","ts5","ts6","ts7"],
+				datasets : [
+					{
+						label: "X axis (gauss)",
+						fillColor : "rgba(220,220,220,0.2)",
+						strokeColor : "rgba(212,242,182,1)",
+						pointColor : "rgba(220,220,220,1)",
+						pointStrokeColor : "#fff",
+						pointHighlightFill : "#fff",
+						pointHighlightStroke : "rgba(220,220,220,1)",
+						data : [rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf()]
+					},
+					{
+						label: "Y axis (gauss)",
+						fillColor : "rgba(151,187,205,0.2)",
+						strokeColor : "rgba(209,84,17,1)",
+						pointColor : "rgba(151,187,205,1)",
+						pointStrokeColor : "#fff",
+						pointHighlightFill : "#fff",
+						pointHighlightStroke : "rgba(151,187,205,1)",
+						data : [rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf()]
+					},
+					{
+						label: "Z axis (gauss)",
+						fillColor : "rgba(151,187,205,0.2)",
+						strokeColor : "rgba(151,187,205,1)",
+						pointColor : "rgba(151,187,205,1)",
+						pointStrokeColor : "#fff",
+						pointHighlightFill : "#fff",
+						pointHighlightStroke : "rgba(151,187,205,1)",
+						data : [rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf(),rsf()]
+					}
+				]
+	}
+		window.onload = function(){
+			var ctx = document.getElementById("canvas-accel").getContext("2d");
+			window.myLineAccel = new Chart(ctx).Line(accelChartData, {
+				responsive: false,
+				scaleIntegersOnly: false,
+				scaleOverride: false,
+
+			    // ** Required if scaleOverride is true **
+			    // Number - The number of steps in a hard coded scale
+			    // scaleSteps: 300,
+			    // Number - The value jump in the hard coded scale
+			    //scaleStepWidth: 0.5,
+			    // Number - The scale starting value
+			    animationSteps: 3,
+			    scaleStartValue: -3.00
+			});
+			//then you just need to generate the legend
+			var legend = window.myLineAccel.generateLegend()
+			//and append it to your page somewhere
+			document.getElementById("accelLegendDiv").innerHTML = legend;
+			
+			ctx = document.getElementById("canvas-angular").getContext("2d");
+			window.myLineAngular = new Chart(ctx).Line(angularChartData, {
+				responsive: false,
+				scaleIntegersOnly: false,
+				scaleOverride: false,
+
+			    // ** Required if scaleOverride is true **
+			    // Number - The number of steps in a hard coded scale
+			    // scaleSteps: 300,
+			    // Number - The value jump in the hard coded scale
+			    //scaleStepWidth: 0.5,
+			    // Number - The scale starting value
+			    animationSteps: 3,
+			    scaleStartValue: -3.00
+			});
+			//then you just need to generate the legend
+			var legend = window.myLineAngular.generateLegend()
+			//and append it to your page somewhere
+			document.getElementById("angularLegendDiv").innerHTML = legend;
+			
+			ctx = document.getElementById("canvas-magnetic").getContext("2d");
+			window.myLineMagnetic = new Chart(ctx).Line(magneticChartData, {
+				responsive: false,
+				scaleIntegersOnly: false,
+				scaleOverride: false,
+
+			    // ** Required if scaleOverride is true **
+			    // Number - The number of steps in a hard coded scale
+			    // scaleSteps: 300,
+			    // Number - The value jump in the hard coded scale
+			    //scaleStepWidth: 0.5,
+			    // Number - The scale starting value
+			    animationSteps: 3,
+			    scaleStartValue: -3.00
+			});
+			//then you just need to generate the legend
+			var legend = window.myLineMagnetic.generateLegend()
+			//and append it to your page somewhere
+			document.getElementById("magneticLegendDiv").innerHTML = legend;
+		}
+		
+		$(document).ready(function() {
+            connect();
+        });
+        var stompClient = null;
+
+        function connect() {
+            var socket = new SockJS('/phidget-ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect('6475c30d-e658-4e75-aa13-83cfb384b53d', 'gh6l264kcer94qf5ic2bcrj9tl', function(frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/phidget-stream-tap', function(message){
+                    showEventInfo(message.body);
+                });
+            });
+        }
+
+
+        function showEventInfo(eventCollectionJson) {
+            var eventFeatures = $.parseJSON(eventCollectionJson);
+            var response = $("#phidgetbody");
+            response.empty();
+                var eventDesc = eventFeatures.spatial.type;
+                if (eventDesc=="accel") {
+	                var x = parseFloat(eventFeatures.spatial.x);
+	                var y = parseFloat(eventFeatures.spatial.y);
+	                var z = parseFloat(eventFeatures.spatial.z);
+	                var ts = eventFeatures.spatial.rcvts;
+	                
+	    			window.myLineAccel.removeData( )
+	                window.myLineAccel.addData([x, y, z], ts);
+                }
+                if (eventDesc=="angular") {
+	                var x = parseFloat(eventFeatures.spatial.x);
+	                var y = parseFloat(eventFeatures.spatial.y);
+	                var z = parseFloat(eventFeatures.spatial.z);
+	                var ts = eventFeatures.spatial.rcvts;
+	                
+	    			window.myLineAngular.removeData( )
+	                window.myLineAngular.addData([x, y, z], ts);
+                }
+                if (eventDesc=="magnetic") {
+	                var x = parseFloat(eventFeatures.spatial.x);
+	                var y = parseFloat(eventFeatures.spatial.y);
+	                var z = parseFloat(eventFeatures.spatial.z);
+	                var ts = eventFeatures.spatial.rcvts;
+	                
+	    			window.myLineMagnetic.removeData( )
+	                window.myLineMagnetic.addData([x, y, z], ts);
+                }
+                /* var tr = $("<tr/>");
+                tr.append($("<td/>").text(eventDesc));
+                tr.append($("<td/>").text(x));
+                tr.append($("<td/>").text(y));
+                tr.append($("<td/>").text(z));
+                tr.append($("<td/>").text(ts));
+                response.append(tr); */
+        }
+	</script>
+	</body>
+</html>
