@@ -6,8 +6,9 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by/2.5
 """
 
 __author__ = 'Adam Stelmack'
-__version__ = '2.1.8'
-__date__ = 'May 17 2010'
+__revised__= 'Mike Wright'
+__version__ = '2.2.0'
+__date__ = 'Jan 5, 2015'
 
 #Basic imports
 from ctypes import *
@@ -19,6 +20,7 @@ from Phidgets.Phidget import Phidget
 from Phidgets.PhidgetException import PhidgetErrorCodes, PhidgetException
 from Phidgets.Events.Events import SpatialDataEventArgs, AttachEventArgs, DetachEventArgs, ErrorEventArgs
 from Phidgets.Devices.Spatial import Spatial, SpatialEventData, TimeSpan
+from Phidgets.Devices.GPS import GPS
 import urllib, httplib2
 
 springxd_url = 'http://phidgets.mikepwright.dyndns.ws:8080'
@@ -29,6 +31,7 @@ h.add_credentials("user", "******", "http://192.168.0.108:9020")
 #Create an accelerometer object
 try:
     spatial = Spatial()
+    gps = GPS()
 except RuntimeError as e:
     print("Runtime Exception: %s" % e.details)
     print("Exiting....")
@@ -80,12 +83,54 @@ def SpatialData(e):
             data = "magnetic," + str(serialnum) + "," + str(datetime.datetime.now()) + "," + str(spatialData.MagneticField[0]) + "," + str(spatialData.MagneticField[1]) +"," + str(spatialData.MagneticField[2])
 	    resp, content = h.request(springxd_url, 'POST', data)
 
+def GPSAttached(e):
+    attached = e.device
+    print("GPS %i Attached!" % (attached.getSerialNum()))
+
+def GPSDetached(e):
+    detached = e.device
+    print("GPS %i Detached!" % (detached.getSerialNum()))
+
+def GPSError(e):
+    try:
+        source = e.device
+        print("GPS %i: Phidget Error %i: %s" % (source.getSerialNum(), e.eCode, e.description))
+    except PhidgetException as e:
+        print("Phidget Exception %i: %s" % (e.code, e.details))
+
+def GPSPositionChanged(e):
+	global prev_lat
+	global prev_long
+	global prev_alt
+	source = e.device
+	serialnum = source.getSerialNum()
+	if (abs(e.latitude - prev_lat) > .001 or abs(e.longitude - prev_long) > .001 or abs(e.altitude - prev_alt) > .001):
+		data = "gps," + str(serialnum) + "," + str(datetime.datetime.now()) + "," + str(e.latitude) + "," + str(e.longitude) +"," + str(e.altitude)
+		resp, content = h.request(springxd_url, 'POST', data)
+		prev_lat = e.latitude
+		prev_long = e.longitude
+		prev_alt = e.altitude
+    #print("GPS %i: Latitude: %F, Longitude: %F, Altitude: %F, Date: %s, Time: %s" % (source.getSerialNum(), e.latitude, e.longitude, e.altitude, source.getDate().toString(), source.getTime().toString()))
+
+def GPSPositionFixStatusChanged(e):
+    source = e.device
+    if e.positionFixStatus:
+        status = "FIXED"
+    else:
+        status = "NOT FIXED"
+    print("GPS %i: Position Fix Status: %s" % (source.getSerialNum(), status))
 #Main Program Code
 try:
     spatial.setOnAttachHandler(SpatialAttached)
     spatial.setOnDetachHandler(SpatialDetached)
     spatial.setOnErrorhandler(SpatialError)
     spatial.setOnSpatialDataHandler(SpatialData)
+    
+    gps.setOnAttachHandler(GPSAttached)
+    gps.setOnDetachHandler(GPSDetached)
+    gps.setOnErrorhandler(GPSError)
+    gps.setOnPositionChangeHandler(GPSPositionChanged)
+    gps.setOnPositionFixStatusChangeHandler(GPSPositionFixStatusChanged)
 except PhidgetException as e:
     print("Phidget Exception %i: %s" % (e.code, e.details))
     print("Exiting....")
@@ -95,6 +140,7 @@ print("Opening phidget object....")
 
 try:
     spatial.openPhidget()
+    gps.openPhidget()
 except PhidgetException as e:
     print("Phidget Exception %i: %s" % (e.code, e.details))
     print("Exiting....")
@@ -103,11 +149,17 @@ except PhidgetException as e:
 print("Waiting for attach....")
 
 try:
+    print("Waiting for accelerometer attach....")
     spatial.waitForAttach(10000)
+    print("accelerometer attached....")
+    print("Waiting for GPS attach....")
+    gps.waitForAttach(10000)
+    print("GPS attached....")
 except PhidgetException as e:
     print("Phidget Exception %i: %s" % (e.code, e.details))
     try:
         spatial.closePhidget()
+        gps.closePhidget()
     except PhidgetException as e:
         print("Phidget Exception %i: %s" % (e.code, e.details))
         print("Exiting....")
@@ -124,6 +176,7 @@ print("Closing...")
 
 try:
     spatial.closePhidget()
+    gps.closePhidget()
 except PhidgetException as e:
     print("Phidget Exception %i: %s" % (e.code, e.details))
     print("Exiting....")

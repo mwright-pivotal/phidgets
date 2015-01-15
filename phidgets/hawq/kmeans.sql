@@ -5,8 +5,10 @@ rcvts timestamp,
 points double precision[]);
 
 insert into phidgets.spatial_points 
-select accel.rcvts, array [accel.x, accel.y, accel.z]
-from phidgets.spatial_acceleration accel;
+select accel.rcvts, array [accel.x, accel.y, accel.z, ang.x, ang.y, ang.z, mag.x, mag.y, mag.z]
+from phidgets.spatial_acceleration accel,phidgets.spatial_angular ang, phidgets.spatial_magnetic mag
+where abs(EXTRACT(EPOCH FROM accel.rcvts) - EXTRACT(EPOCH FROM ang.rcvts)) < 1
+and abs(EXTRACT(EPOCH FROM accel.rcvts) - EXTRACT(EPOCH FROM mag.rcvts)) < 1;
 
 SELECT * FROM madlib.kmeanspp( 'phidgets.spatial_points',
                                'points',
@@ -24,3 +26,10 @@ FROM public.km_sample as data,
                            'madlib.squared_dist_norm2',
                            'madlib.avg', 20, 0.001)) as centroids
 ORDER BY data.pid;
+
+select count(*) from phidgets.spatial_acceleration accel,phidgets.spatial_angular ang, phidgets.spatial_magnetic mag
+where abs(EXTRACT(EPOCH FROM accel.rcvts) - EXTRACT(EPOCH FROM ang.rcvts)) < 1
+and abs(EXTRACT(EPOCH FROM accel.rcvts) - EXTRACT(EPOCH FROM mag.rcvts)) < 1
+
+select EXTRACT(EPOCH FROM TIMESTAMP WITH TIME ZONE accel.rcvts)
+from phidgets.spatial_acceleration accel limit 100;
