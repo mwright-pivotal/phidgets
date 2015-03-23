@@ -26,11 +26,11 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		StompBrokerRelayRegistration relay = config.enableStompBrokerRelay("/topic/").setRelayHost(getRabbitUri());
-		relay.setSystemLogin("6475c30d-e658-4e75-aa13-83cfb384b53d");
-		relay.setSystemPasscode("gh6l264kcer94qf5ic2bcrj9tl");
-		relay.setClientLogin("6475c30d-e658-4e75-aa13-83cfb384b53d");
-		relay.setClientPasscode("gh6l264kcer94qf5ic2bcrj9tl");
-		relay.setVirtualHost("b2a4c452-ef36-4320-8bf4-8bfb242e3277");
+		relay.setSystemLogin(this.getRabbitUsername());
+		relay.setSystemPasscode(this.getRabbitPswd());
+		relay.setClientLogin(this.getRabbitUsername());
+		relay.setClientPasscode(this.getRabbitPswd());
+		relay.setVirtualHost(this.getRabbitVhost());
 	}
 
 	@Override
@@ -64,5 +64,29 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 		JsonNode rabbitMqNode = this.getVcapServices().get("p-rabbitmq");
 		JsonNode credentials = rabbitMqNode.get(0).get("credentials");
 		return credentials.get("protocols").get("stomp").get("host").textValue();
+	}
+	
+	private String getRabbitUsername() {
+		if (this.getVcapServices()==null)
+			return "admin";
+		JsonNode rabbitMqNode = this.getVcapServices().get("p-rabbitmq");
+		JsonNode credentials = rabbitMqNode.get(0).get("credentials");
+		return credentials.get("username").textValue();
+	}
+	
+	private String getRabbitPswd() {
+		if (this.getVcapServices()==null)
+			return "admin";
+		JsonNode rabbitMqNode = this.getVcapServices().get("p-rabbitmq");
+		JsonNode credentials = rabbitMqNode.get(0).get("credentials");
+		return credentials.get("password").textValue();
+	}
+	
+	private String getRabbitVhost() {
+		if (this.getVcapServices()==null)
+			return "admin";
+		JsonNode rabbitMqNode = this.getVcapServices().get("p-rabbitmq");
+		JsonNode credentials = rabbitMqNode.get(0).get("credentials");
+		return credentials.get("vhost").textValue();
 	}
 }

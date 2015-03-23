@@ -72,16 +72,16 @@ def SpatialData(e):
     for index, spatialData in enumerate(e.spatialData):
         print("=== Data Set: %i ===" % (index))
         if len(spatialData.Acceleration) > 0:
-	    #data = "{serialnum : \"" + str(source.getSerialNum()) + "\", rcvts : \"" + str(datetime.datetime.now()) + "\", acceleration:{ x : \"" + str(spatialData.Acceleration[0]) + "\" , y : \"" + str(spatialData.Acceleration[1]) +"\" , z : \"" + str(spatialData.Acceleration[2]) + "\"} }"
-	    data = "accel," + str(serialnum) + "," + str(datetime.datetime.now()) + "," + str(spatialData.Acceleration[0]) + "," + str(spatialData.Acceleration[1]) +"," + str(spatialData.Acceleration[2])
-	    resp, content = h.request(springxd_url, 'POST', data)
+    	    #data = "{serialnum : \"" + str(source.getSerialNum()) + "\", rcvts : \"" + str(datetime.datetime.now()) + "\", acceleration:{ x : \"" + str(spatialData.Acceleration[0]) + "\" , y : \"" + str(spatialData.Acceleration[1]) +"\" , z : \"" + str(spatialData.Acceleration[2]) + "\"} }"
+    	    data = "accel," + str(serialnum) + "," + str(datetime.datetime.now()) + "," + str(spatialData.Acceleration[0]) + "," + str(spatialData.Acceleration[1]) +"," + str(spatialData.Acceleration[2])
+    	    resp, content = h.request(springxd_url, 'POST', data)
         if len(spatialData.AngularRate) > 0:
-	    #data = "{serialnum : " + str(source.getSerialNum()) + ", rcvts : " + str(datetime.datetime.now()) + ", angularRate:{ x : " + str(spatialData.AngularRate[0]) + " , y :  " + str(spatialData.AngularRate[1]) +" , z : " + str(spatialData.AngularRate[2]) + "} }"
-	    data = "angular," + str(serialnum) + "," + str(datetime.datetime.now()) + "," + str(spatialData.AngularRate[0]) + "," + str(spatialData.AngularRate[1]) +"," + str(spatialData.AngularRate[2])
-	    resp, content = h.request(springxd_url, 'POST', data)
+    	    #data = "{serialnum : " + str(source.getSerialNum()) + ", rcvts : " + str(datetime.datetime.now()) + ", angularRate:{ x : " + str(spatialData.AngularRate[0]) + " , y :  " + str(spatialData.AngularRate[1]) +" , z : " + str(spatialData.AngularRate[2]) + "} }"
+    	    data = "angular," + str(serialnum) + "," + str(datetime.datetime.now()) + "," + str(spatialData.AngularRate[0]) + "," + str(spatialData.AngularRate[1]) +"," + str(spatialData.AngularRate[2])
+    	    resp, content = h.request(springxd_url, 'POST', data)
         if len(spatialData.MagneticField) > 0:
             data = "magnetic," + str(serialnum) + "," + str(datetime.datetime.now()) + "," + str(spatialData.MagneticField[0]) + "," + str(spatialData.MagneticField[1]) +"," + str(spatialData.MagneticField[2])
-	    resp, content = h.request(springxd_url, 'POST', data)
+            resp, content = h.request(springxd_url, 'POST', data)
 
 def GPSAttached(e):
     attached = e.device
