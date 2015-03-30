@@ -1,0 +1,7 @@
+applications:
+- name: phidgets-v1
+  memory: 1024M
+  host: phidgets
+  path: target/phidgets-0.0.1-SNAPSHOT.jar
+  services: 
+  - phidget-messages

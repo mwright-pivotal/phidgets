@@ -15,6 +15,7 @@ from ctypes import *
 import sys
 import datetime
 import time
+import simplejson
 #Phidget specific imports
 from Phidgets.Phidget import Phidget
 from Phidgets.PhidgetException import PhidgetErrorCodes, PhidgetException

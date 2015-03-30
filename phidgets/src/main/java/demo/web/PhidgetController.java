@@ -14,6 +14,11 @@ public class PhidgetController {
 		return "spatial/list";
 	}
 	
+	@RequestMapping("/")
+	public String home() {
+		return "spatial/line";
+	}
+	
 	@RequestMapping("/spatialGraph")
 	public String lineSpatial() {
 		return "spatial/line";

@@ -55,11 +55,17 @@
 				</td>
 				<td></td>
 			</tr>
+			<tr>
+				<td>
+					<a href="/spatial">Data View</a>
+				</td>
+				<td></td>
+			</tr>
 		</table>
 	</div>
 	<div id="canvas-google"></div>
 	<script type="text/javascript"
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgbjuZwh4hI8vOexfIQLA58iVVq5cCSjg">
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAih2lugiaIr9zRhaPF1vExdybaHM3izAY">
 		
 	</script>
 	<script>
@@ -292,45 +298,46 @@
 
 		function showEventInfo(eventCollectionJson) {
 			var eventFeatures = $.parseJSON(eventCollectionJson);
+			//console.log(eventFeatures)
 			var response = $("#phidgetbody");
 			response.empty();
-			var eventDesc = eventFeatures.spatial.type;
+			var eventDesc = eventFeatures.type;
 			if (eventDesc == "accel") {
-				var x = parseFloat(eventFeatures.spatial.x);
-				var y = parseFloat(eventFeatures.spatial.y);
-				var z = parseFloat(eventFeatures.spatial.z);
-				var ts = eventFeatures.spatial.rcvts;
+				var x = parseFloat(eventFeatures.x);
+				var y = parseFloat(eventFeatures.y);
+				var z = parseFloat(eventFeatures.z);
+				var ts = eventFeatures.rcvts;
 
 				window.myLineAccel.removeData()
 				window.myLineAccel.addData([ x, y, z ], ts);
-			}
+			} else 
 			if (eventDesc == "angular") {
-				var x = parseFloat(eventFeatures.spatial.x);
-				var y = parseFloat(eventFeatures.spatial.y);
-				var z = parseFloat(eventFeatures.spatial.z);
-				var ts = eventFeatures.spatial.rcvts;
+				var x = parseFloat(eventFeatures.x);
+				var y = parseFloat(eventFeatures.y);
+				var z = parseFloat(eventFeatures.z);
+				var ts = eventFeatures.rcvts;
 
 				window.myLineAngular.removeData()
 				window.myLineAngular.addData([ x, y, z ], ts);
-			}
+			} else 
 			if (eventDesc == "magnetic") {
-				var x = parseFloat(eventFeatures.spatial.x);
-				var y = parseFloat(eventFeatures.spatial.y);
-				var z = parseFloat(eventFeatures.spatial.z);
-				var ts = eventFeatures.spatial.rcvts;
+				var x = parseFloat(eventFeatures.x);
+				var y = parseFloat(eventFeatures.y);
+				var z = parseFloat(eventFeatures.z);
+				var ts = eventFeatures.rcvts;
 
 				window.myLineMagnetic.removeData()
 				window.myLineMagnetic.addData([ x, y, z ], ts);
-			}
+			} else 
 			if (eventDesc == "gps") {
-				var lat = parseFloat(eventFeatures.spatial.x);
-				var long = parseFloat(eventFeatures.spatial.y);
-				var alt = parseFloat(eventFeatures.spatial.z);
+				var lat = parseFloat(eventFeatures.lat);
+				var long = parseFloat(eventFeatures.long);
+				var alt = parseFloat(eventFeatures.alt);
 				var ts = eventFeatures.spatial.rcvts;
 
 				gPos = new google.maps.LatLng(lat, long);
 				marker.setPosition(gPos);
-			}
+			} else {console.log("invalid JSON")}
 			/* var tr = $("<tr/>");
 			tr.append($("<td/>").text(eventDesc));
 			tr.append($("<td/>").text(x));

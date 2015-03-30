@@ -35,23 +35,34 @@
           function showEventInfo(eventCollectionJson) {
               var eventFeatures = $.parseJSON(eventCollectionJson);
               var response = $("#phidgetbody");
-              response.empty();
-                  var eventDesc = eventFeatures.spatial.type;
-                  var x = parseFloat(eventFeatures.spatial.x);
-                  var y = parseFloat(eventFeatures.spatial.y);
-                  var z = parseFloat(eventFeatures.spatial.z);
-                  var ts = eventFeatures.spatial.rcvts;
+              //response.empty();
+                  var eventDesc = eventFeatures.type;
+                  var x = parseFloat(eventFeatures.x);
+                  var y = parseFloat(eventFeatures.y);
+                  var z = parseFloat(eventFeatures.z);
+                  var ts = eventFeatures.rcvts;
                   
-                  myLineChart.removeData( )
-                  myLineChart.addData([x, y], ts);
+                  var myTable = document.getElementById("sensor-data");
+                  row = myTable.insertRow(1); 
                   
-                  var tr = $("<tr/>");
-                  tr.append($("<td/>").text(eventDesc));
-                  tr.append($("<td/>").text(x));
-                  tr.append($("<td/>").text(y));
-                  tr.append($("<td/>").text(z));
-                  tr.append($("<td/>").text(ts));
-                  response.append(tr);
+                  descCell = row.insertCell(0);
+                  descCell.innerHTML = eventDesc;
+                  
+                  xCell = row.insertCell(1);
+                  xCell.innerHTML = x;
+                  
+                  yCell = row.insertCell(2);
+                  yCell.innerHTML = y;
+                  
+                  zCell = row.insertCell(3);
+                  zCell.innerHTML = z;
+                  
+                  tsCell = row.insertCell(4);
+                  tsCell.innerHTML = ts;
+                  
+                  if (myTable.rows.length >= 10) {
+                	  myTable.deleteRow(-1);
+                  }
           }
           
           var data = {
@@ -95,7 +106,7 @@
 	    </div>	
 	    <div class="row">
 		    <div class="col-sm-12">
-		      <table class="table table-bordered table-striped">
+		      <table id="sensor-data" class="table table-bordered table-striped">
 		        <thead>
 		          <tr>
 		            <th width="20%">Desc</th>
