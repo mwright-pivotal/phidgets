@@ -13,56 +13,57 @@
 <script src="../../js/moment.min.js"></script>
 <script src="../../js/Chart.js"></script>
 <style type="text/css">
-      html, body, #canvas-google { height: 100%; margin: 0; padding: 0;}
-    </style>
+html, body, #canvas-google {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+</style>
 </head>
-<body>
-	<div style="width: 100%">
-		<table>
-			<tr>
-				<td>
-					<div id="diagramDiv">
-						<img alt=""
-							src="http://www.phidgets.com/wiki/images/thumb/8/8a/1041_0_Axis_Diagram.jpg/400px-1041_0_Axis_Diagram.jpg" />
-					</div>
-				</td>
-				<td>
-					<div id="flowDiv">
-						<img alt="" src="../../img/Slide02.png" />
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div>
-						<canvas id="canvas-accel" height="450" width="600"></canvas>
-					</div>
-					<div id="accelLegendDiv"></div>
-				</td>
-				<td>
-					<div>
-						<canvas id="canvas-angular" height="450" width="600"></canvas>
-					</div>
-					<div id="angularLegendDiv"></div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div>
-						<canvas id="canvas-magnetic" height="450" width="600"></canvas>
-					</div>
-					<div id="magneticLegendDiv"></div>
-				</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>
-					<a href="/spatial">Data View</a>
-				</td>
-				<td></td>
-			</tr>
-		</table>
+<body onload="init()">
+	<div class="tabContent" id="sensor-details">
+		<h2>Spatial Sensor Details</h2>
+		<div id="diagramDiv">
+			<img alt=""
+				src="http://www.phidgets.com/wiki/images/thumb/8/8a/1041_0_Axis_Diagram.jpg/400px-1041_0_Axis_Diagram.jpg" />
+		</div>
 	</div>
+	<div class="tabContent" id="flow">
+		<h2>Data Flow</h2>
+		<div id="flowDiv">
+			<img alt="" src="../../img/Slide02.png" />
+		</div>
+	</div>
+	<div class="tabContent" id="acceleration">
+		<h2>3D Acceleration (m/s2)</h2>
+		<div>
+			<canvas id="canvas-accel" height="450" width="600"></canvas>
+		</div>
+		<div id="accelLegendDiv"></div>
+	</div>
+	<div class="tabContent" id="angular">
+		<h2>3D Angular Rate (degrees/s)</h2>
+		<div>
+			<canvas id="canvas-angular" height="450" width="600"></canvas>
+		</div>
+		<div id="angularLegendDiv"></div>
+	</div>
+	<div class="tabContent" id="magnetic">
+		<h2>3D Magnetic (guass)</h2>
+		<div>
+			<canvas id="canvas-magnetic" height="450" width="600"></canvas>
+		</div>
+		<div id="magneticLegendDiv"></div>
+	</div>
+
+	<ul id="tabs">
+		<li><a href="#sensor-details" onclick="showTab()">Spatial Sensor</a></li>
+		<li><a href="#flow" onclick="showTab()">Data Flow</a></li>
+		<li><a href="#acceleration" onclick="showTab()">Acceleration</a></li>
+		<li><a href="#magnetic" onclick="showTab()">Magnetic</a></li>
+		<li><a href="#angular" onclick="showTab()">Angular</a></li>
+	</ul>
+	<a href="/spatial">Data View</a>
 	<div id="canvas-google"></div>
 	<script type="text/javascript"
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAih2lugiaIr9zRhaPF1vExdybaHM3izAY">
@@ -266,16 +267,16 @@
 				},
 				zoom : 10
 			};
-			
-			map = new google.maps.Map(document
-					.getElementById('canvas-google'), mapOptions);
+
+			map = new google.maps.Map(document.getElementById('canvas-google'),
+					mapOptions);
 			var image = 'img/accelerometer.gif';
-			  var myLatLng = new google.maps.LatLng(37.394414, -122.147795);
-			  marker = new google.maps.Marker({
-			      position: myLatLng,
-			      map: map,
-			      icon: image
-			  });
+			var myLatLng = new google.maps.LatLng(37.394414, -122.147795);
+			marker = new google.maps.Marker({
+				position : myLatLng,
+				map : map,
+				icon : image
+			});
 		}
 
 		$(document).ready(function() {
@@ -310,8 +311,7 @@
 
 				window.myLineAccel.removeData()
 				window.myLineAccel.addData([ x, y, z ], ts);
-			} else 
-			if (eventDesc == "angular") {
+			} else if (eventDesc == "angular") {
 				var x = parseFloat(eventFeatures.x);
 				var y = parseFloat(eventFeatures.y);
 				var z = parseFloat(eventFeatures.z);
@@ -319,8 +319,7 @@
 
 				window.myLineAngular.removeData()
 				window.myLineAngular.addData([ x, y, z ], ts);
-			} else 
-			if (eventDesc == "magnetic") {
+			} else if (eventDesc == "magnetic") {
 				var x = parseFloat(eventFeatures.x);
 				var y = parseFloat(eventFeatures.y);
 				var z = parseFloat(eventFeatures.z);
@@ -328,8 +327,7 @@
 
 				window.myLineMagnetic.removeData()
 				window.myLineMagnetic.addData([ x, y, z ], ts);
-			} else 
-			if (eventDesc == "gps") {
+			} else if (eventDesc == "gps") {
 				var lat = parseFloat(eventFeatures.lat);
 				var long = parseFloat(eventFeatures.long);
 				var alt = parseFloat(eventFeatures.alt);
@@ -337,7 +335,9 @@
 
 				gPos = new google.maps.LatLng(lat, long);
 				marker.setPosition(gPos);
-			} else {console.log("invalid JSON")}
+			} else {
+				console.log("invalid JSON")
+			}
 			/* var tr = $("<tr/>");
 			tr.append($("<td/>").text(eventDesc));
 			tr.append($("<td/>").text(x));
@@ -346,6 +346,77 @@
 			tr.append($("<td/>").text(ts));
 			response.append(tr); */
 		}
+
+		//the following code is to support tabs
+		var tabLinks = new Array();
+		var contentDivs = new Array();
+
+		function init() {
+
+			// Grab the tab links and content divs from the page
+			var tabListItems = document.getElementById('tabs').childNodes;
+			for (var i = 0; i < tabListItems.length; i++) {
+				if (tabListItems[i].nodeName == "LI") {
+					var tabLink = getFirstChildWithTagName(tabListItems[i], 'A');
+					var id = getHash(tabLink.getAttribute('href'));
+					tabLinks[id] = tabLink;
+					contentDivs[id] = document.getElementById(id);
+				}
+			}
+
+			// Assign onclick events to the tab links, and
+			// highlight the first tab
+			var i = 0;
+
+			for ( var id in tabLinks) {
+				tabLinks[id].onclick = showTab;
+				tabLinks[id].onfocus = function() {
+					this.blur()
+				};
+				if (i == 0)
+					tabLinks[id].className = 'selected';
+				i++;
+			}
+
+			// Hide all content divs except the first
+			var i = 0;
+
+			for ( var id in contentDivs) {
+				if (i != 0)
+					contentDivs[id].className = 'tabContent hide';
+				i++;
+			}
+		}
+		
+		function showTab() {
+		      var selectedId = getHash( this.getAttribute('href') );
+
+		      // Highlight the selected tab, and dim all others.
+		      // Also show the selected content div, and hide all others.
+		      for ( var id in contentDivs ) {
+		        if ( id == selectedId ) {
+		          tabLinks[id].className = 'selected';
+		          contentDivs[id].className = 'tabContent';
+		        } else {
+		          tabLinks[id].className = '';
+		          contentDivs[id].className = 'tabContent hide';
+		        }
+		      }
+
+		      // Stop the browser following the link
+		      return false;
+		    }
+		
+		function getFirstChildWithTagName( element, tagName ) {
+		      for ( var i = 0; i < element.childNodes.length; i++ ) {
+		        if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
+		      }
+		    }
+		
+		function getHash( url ) {
+		      var hashPos = url.lastIndexOf ( '#' );
+		      return url.substring( hashPos + 1 );
+		    }
 	</script>
 </body>
 </html>
