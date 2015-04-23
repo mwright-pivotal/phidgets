@@ -3,15 +3,16 @@
 <head>
 <title>Realtime Spatial Line Chart</title>
 <script src="../../js/Chart.js"></script>
-<link rel="stylesheet" href="../../static/css/bootstrap.min.css" />
-<link rel="stylesheet" href="../../static/css/bootstrap-theme.css" />
-<link rel="stylesheet" href="../../static/css/application.css" />
+<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+<link rel="stylesheet" href="../../css/bootstrap-theme.css" />
+<link rel="stylesheet" href="../../css/application.css" />
 
 <script src="../../js/sockjs-0.3.4.js"></script>
 <script src="../../js/stomp.js"></script>
 <script src="../../js/jquery-1.7.2.js"></script>
 <script src="../../js/moment.min.js"></script>
 <script src="../../js/Chart.js"></script>
+<script src="../../js/tabs.js"></script>
 <style type="text/css">
 html, body, #canvas-google {
 	height: 100%;
@@ -21,16 +22,25 @@ html, body, #canvas-google {
 </style>
 </head>
 <body onload="init()">
+	<ul id="tabs">
+		<li><a href="#sensor-details">Spatial
+				Sensor</a></li>
+		<li><a href="#flow">Data Flow</a></li>
+		<li><a href="#acceleration">Acceleration</a></li>
+		<li><a href="#magnetic">Magnetic</a></li>
+		<li><a href="#angular">Angular</a></li>
+	</ul>
+	
 	<div class="tabContent" id="sensor-details">
 		<h2>Spatial Sensor Details</h2>
-		<div id="diagramDiv">
+		<div>
 			<img alt=""
 				src="http://www.phidgets.com/wiki/images/thumb/8/8a/1041_0_Axis_Diagram.jpg/400px-1041_0_Axis_Diagram.jpg" />
 		</div>
 	</div>
 	<div class="tabContent" id="flow">
 		<h2>Data Flow</h2>
-		<div id="flowDiv">
+		<div>
 			<img alt="" src="../../img/Slide02.png" />
 		</div>
 	</div>
@@ -56,14 +66,6 @@ html, body, #canvas-google {
 		<div id="magneticLegendDiv"></div>
 	</div>
 
-	<ul id="tabs">
-		<li><a href="#sensor-details" onclick="showTab()">Spatial
-				Sensor</a></li>
-		<li><a href="#flow" onclick="showTab()">Data Flow</a></li>
-		<li><a href="#acceleration" onclick="showTab()">Acceleration</a></li>
-		<li><a href="#magnetic" onclick="showTab()">Magnetic</a></li>
-		<li><a href="#angular" onclick="showTab()">Angular</a></li>
-	</ul>
 	<a href="/spatial">Data View</a>
 	<div id="canvas-google"></div>
 	<script type="text/javascript"
@@ -73,10 +75,6 @@ html, body, #canvas-google {
 	<script type="text/javascript">
 		var map;
 		var marker;
-
-		var tabLinks = new Array();
-		var contentDivs = new Array();
-
 		var rsf = function() {
 			return (Math.random() * 3)
 		};
@@ -343,83 +341,6 @@ html, body, #canvas-google {
 			} else {
 				console.log("invalid JSON")
 			}
-			/* var tr = $("<tr/>");
-			tr.append($("<td/>").text(eventDesc));
-			tr.append($("<td/>").text(x));
-			tr.append($("<td/>").text(y));
-			tr.append($("<td/>").text(z));
-			tr.append($("<td/>").text(ts));
-			response.append(tr); */
-		}
-
-		//the following code is to support tabs
-
-		function init() {
-
-			// Grab the tab links and content divs from the page
-			var tabListItems = document.getElementById('tabs').childNodes;
-			for (var i = 0; i < tabListItems.length; i++) {
-				if (tabListItems[i].nodeName == "LI") {
-					var tabLink = getFirstChildWithTagName(tabListItems[i], 'A');
-					var id = getHash(tabLink.getAttribute('href'));
-					tabLinks[id] = tabLink;
-					contentDivs[id] = document.getElementById(id);
-				}
-			}
-
-			// Assign onclick events to the tab links, and
-			// highlight the first tab
-			var i = 0;
-
-			for ( var id in tabLinks) {
-				tabLinks[id].onclick = showTab;
-				tabLinks[id].onfocus = function() {
-					this.blur()
-				};
-				if (i == 0)
-					tabLinks[id].className = 'selected';
-				i++;
-			}
-
-			// Hide all content divs except the first
-			var i = 0;
-
-			for ( var id in contentDivs) {
-				if (i != 0)
-					contentDivs[id].className = 'tabContent hide';
-				i++;
-			}
-		}
-
-		function showTab() {
-			var selectedId = getHash(this.getAttribute('href'));
-
-			// Highlight the selected tab, and dim all others.
-			// Also show the selected content div, and hide all others.
-			for ( var id in contentDivs) {
-				if (id == selectedId) {
-					tabLinks[id].className = 'selected';
-					contentDivs[id].className = 'tabContent';
-				} else {
-					tabLinks[id].className = '';
-					contentDivs[id].className = 'tabContent hide';
-				}
-			}
-
-			// Stop the browser following the link
-			return false;
-		}
-
-		function getFirstChildWithTagName(element, tagName) {
-			for (var i = 0; i < element.childNodes.length; i++) {
-				if (element.childNodes[i].nodeName == tagName)
-					return element.childNodes[i];
-			}
-		}
-
-		function getHash(url) {
-			var hashPos = url.lastIndexOf('#');
-			return url.substring(hashPos + 1);
 		}
 	</script>
 </body>
