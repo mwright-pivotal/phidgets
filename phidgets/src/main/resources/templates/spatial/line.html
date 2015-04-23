@@ -57,7 +57,8 @@ html, body, #canvas-google {
 	</div>
 
 	<ul id="tabs">
-		<li><a href="#sensor-details" onclick="showTab()">Spatial Sensor</a></li>
+		<li><a href="#sensor-details" onclick="showTab()">Spatial
+				Sensor</a></li>
 		<li><a href="#flow" onclick="showTab()">Data Flow</a></li>
 		<li><a href="#acceleration" onclick="showTab()">Acceleration</a></li>
 		<li><a href="#magnetic" onclick="showTab()">Magnetic</a></li>
@@ -69,13 +70,13 @@ html, body, #canvas-google {
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAih2lugiaIr9zRhaPF1vExdybaHM3izAY">
 		
 	</script>
-	<script>
+	<script type="text/javascript">
 		var map;
 		var marker;
-		
+
 		var tabLinks = new Array();
 		var contentDivs = new Array();
-		
+
 		var rsf = function() {
 			return (Math.random() * 3)
 		};
@@ -352,7 +353,7 @@ html, body, #canvas-google {
 		}
 
 		//the following code is to support tabs
-		
+
 		function init() {
 
 			// Grab the tab links and content divs from the page
@@ -389,36 +390,37 @@ html, body, #canvas-google {
 				i++;
 			}
 		}
-		
+
 		function showTab() {
-		      var selectedId = getHash( this.getAttribute('href') );
+			var selectedId = getHash(this.getAttribute('href'));
 
-		      // Highlight the selected tab, and dim all others.
-		      // Also show the selected content div, and hide all others.
-		      for ( var id in contentDivs ) {
-		        if ( id == selectedId ) {
-		          tabLinks[id].className = 'selected';
-		          contentDivs[id].className = 'tabContent';
-		        } else {
-		          tabLinks[id].className = '';
-		          contentDivs[id].className = 'tabContent hide';
-		        }
-		      }
+			// Highlight the selected tab, and dim all others.
+			// Also show the selected content div, and hide all others.
+			for ( var id in contentDivs) {
+				if (id == selectedId) {
+					tabLinks[id].className = 'selected';
+					contentDivs[id].className = 'tabContent';
+				} else {
+					tabLinks[id].className = '';
+					contentDivs[id].className = 'tabContent hide';
+				}
+			}
 
-		      // Stop the browser following the link
-		      return false;
-		    }
-		
-		function getFirstChildWithTagName( element, tagName ) {
-		      for ( var i = 0; i < element.childNodes.length; i++ ) {
-		        if ( element.childNodes[i].nodeName == tagName ) return element.childNodes[i];
-		      }
-		    }
-		
-		function getHash( url ) {
-		      var hashPos = url.lastIndexOf ( '#' );
-		      return url.substring( hashPos + 1 );
-		    }
+			// Stop the browser following the link
+			return false;
+		}
+
+		function getFirstChildWithTagName(element, tagName) {
+			for (var i = 0; i < element.childNodes.length; i++) {
+				if (element.childNodes[i].nodeName == tagName)
+					return element.childNodes[i];
+			}
+		}
+
+		function getHash(url) {
+			var hashPos = url.lastIndexOf('#');
+			return url.substring(hashPos + 1);
+		}
 	</script>
 </body>
 </html>
