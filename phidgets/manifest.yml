@@ -1,5 +1,5 @@
 applications:
-- name: phidgets-v1
+- name: phidgets-v2
   memory: 1024M
   host: phidgets
   path: target/phidgets-0.0.1-SNAPSHOT.jar
