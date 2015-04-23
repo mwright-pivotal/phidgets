@@ -70,8 +70,12 @@ html, body, #canvas-google {
 		
 	</script>
 	<script>
-		var map
-		var marker
+		var map;
+		var marker;
+		
+		var tabLinks = new Array();
+		var contentDivs = new Array();
+		
 		var rsf = function() {
 			return (Math.random() * 3)
 		};
@@ -348,8 +352,6 @@ html, body, #canvas-google {
 		}
 
 		//the following code is to support tabs
-		var tabLinks = new Array()
-		var contentDivs = new Array()
 		
 		function init() {
 
