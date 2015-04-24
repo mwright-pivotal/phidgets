@@ -7,13 +7,14 @@ var tabLinks = new Array();
 var contentDivs = new Array();
 
 function init() {
-
+	console.log("init");
 	// Grab the tab links and content divs from the page
 	var tabListItems = document.getElementById('tabs').childNodes;
 	for (var i = 0; i < tabListItems.length; i++) {
 		if (tabListItems[i].nodeName == "LI") {
 			var tabLink = getFirstChildWithTagName(tabListItems[i], 'A');
 			var id = getHash(tabLink.getAttribute('href'));
+			console.log(id);
 			tabLinks[id] = tabLink;
 			contentDivs[id] = document.getElementById(id);
 		}
@@ -37,8 +38,11 @@ function init() {
 	var i = 0;
 
 	for ( var id in contentDivs) {
-		if (i != 0)
-			contentDivs[id].className = 'tabContent hide';
+		if (i != 0) {
+			//contentDivs[id].className = 'tabContent.hide';
+			contentDivs[id].style.display="block";
+			console.log("hiding " + id)
+		}
 		i++;
 	}
 }
@@ -52,9 +56,11 @@ function showTab() {
 		if (id == selectedId) {
 			tabLinks[id].className = 'selected';
 			contentDivs[id].className = 'tabContent';
+			contentDivs[id].style.display="none";
 		} else {
 			tabLinks[id].className = '';
-			contentDivs[id].className = 'tabContent hide';
+			contentDivs[id].className = 'tabContent.hide';
+			contentDivs[id].style.display="block";
 		}
 	}
 
