@@ -6,8 +6,11 @@
 var tabLinks = new Array();
 var contentDivs = new Array();
 
+window.onload = function() {
+	 init();
+}
+
 function init() {
-	console.log("init");
 	// Grab the tab links and content divs from the page
 	var tabListItems = document.getElementById('tabs').childNodes;
 	for (var i = 0; i < tabListItems.length; i++) {
@@ -39,9 +42,8 @@ function init() {
 
 	for ( var id in contentDivs) {
 		if (i != 0) {
-			//contentDivs[id].className = 'tabContent.hide';
-			contentDivs[id].style.display="block";
-			console.log("hiding " + id)
+			contentDivs[id].className = 'tabContent.hide';
+			contentDivs[id].style.display="none";
 		}
 		i++;
 	}
@@ -56,11 +58,11 @@ function showTab() {
 		if (id == selectedId) {
 			tabLinks[id].className = 'selected';
 			contentDivs[id].className = 'tabContent';
-			contentDivs[id].style.display="none";
+			contentDivs[id].style.display="";
 		} else {
 			tabLinks[id].className = '';
 			contentDivs[id].className = 'tabContent.hide';
-			contentDivs[id].style.display="block";
+			contentDivs[id].style.display="none";
 		}
 	}
 
