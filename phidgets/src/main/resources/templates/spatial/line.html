@@ -413,8 +413,8 @@ html, body, #canvas-google {
 				var value = parseFloat(eventFeatures.value);
 				var ts = eventFeatures.rcvts;
 
-				window.myLineMagnetic.removeData()
-				window.myLineMagnetic.addData([ value ], ts);
+				window.myBarVibration.removeData()
+				window.myBarVibration.addData([ value ], ts);
 			} else if (eventDesc == "gps") {
 				var lat = parseFloat(eventFeatures.lat);
 				var long = parseFloat(eventFeatures.long);
