@@ -441,7 +441,7 @@ html, body, #canvas-google {
 				var lat = parseFloat(eventFeatures.lat);
 				var long = parseFloat(eventFeatures.long);
 				var alt = parseFloat(eventFeatures.alt);
-				var ts = eventFeatures.spatial.rcvts;
+				var ts = eventFeatures.rcvts;
 
 				gPos = new google.maps.LatLng(lat, long);
 				marker.setPosition(gPos);
