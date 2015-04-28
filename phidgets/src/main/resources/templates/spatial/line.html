@@ -212,6 +212,28 @@ html, body, #canvas-google {
 								rsf(), rsf() ]
 					} ]
 		}
+		
+		Chart.Scale = Chart.Scale.extend({
+		    calculateX: function (index) {
+		        //check to ensure data is in chart otherwise we will get inifinity
+		        if (!(this.valuesCount)) {
+		            return 0;
+		        }
+		        var isRotated = (this.xLabelRotation > 0),
+		            // innerWidth = (this.offsetGridLines) ? this.width - offsetLeft - this.padding : this.width - (offsetLeft + halfLabelWidth * 2) - this.padding,
+		            innerWidth = this.width - (this.xScalePaddingLeft + this.xScalePaddingRight),
+		            //if we only have one data point take nothing off the count otherwise we get infinity
+		            valueWidth = innerWidth / (this.valuesCount - ((this.offsetGridLines) || this.valuesCount === 1 ? 0 : 1)),
+		            valueOffset = (valueWidth * index) + this.xScalePaddingLeft;
+
+		        if (this.offsetGridLines) {
+		            valueOffset += (valueWidth / 2);
+		        }
+
+		        return Math.round(valueOffset);
+		    },
+		});
+		
 		window.onload = function() {
 			var ctx = document.getElementById("canvas-accel").getContext("2d");
 			window.myLineAccel = new Chart(ctx).Line(accelChartData, {
@@ -330,10 +352,10 @@ html, body, #canvas-google {
 			    scaleShowVerticalLines: true,
 
 			    //Boolean - If there is a stroke on each bar
-			    barShowStroke : true,
+			    barShowStroke : false,
 
 			    //Number - Pixel width of the bar stroke
-			    barStrokeWidth : 2,
+			    barStrokeWidth : 10,
 
 			    //Number - Spacing between each of the X value sets
 			    barValueSpacing : 5,
