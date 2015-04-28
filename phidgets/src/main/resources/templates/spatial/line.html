@@ -410,7 +410,7 @@ html, body, #canvas-google {
 				window.myLineMagnetic.addData([ x, y, z ], ts);
 				
 			} else if (eventDesc == "vibr") {
-				var x = parseFloat(eventFeatures.value);
+				var value = parseFloat(eventFeatures.value);
 				var ts = eventFeatures.rcvts;
 
 				window.myLineMagnetic.removeData()
