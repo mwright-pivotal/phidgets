@@ -444,6 +444,7 @@ html, body, #canvas-google {
 
 				gPos = new google.maps.LatLng(lat, long);
 				marker.setPosition(gPos);
+				map.setPosition(gPos);
 			} else {
 				console.log("invalid JSON")
 			}
