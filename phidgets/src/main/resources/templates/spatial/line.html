@@ -81,7 +81,7 @@ html, body, #canvas-google {
 	</div>
 	<div class="tabContent" id="gps">
 		<h2>GPS</h2>
-		<div id="canvas-google"></div>
+		<div id="canvas-google" height="450" width="600"></div>
 	</div>
 	<script type="text/javascript"
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAih2lugiaIr9zRhaPF1vExdybaHM3izAY">
@@ -376,7 +376,7 @@ html, body, #canvas-google {
 				zoom : 10
 			};
 			
-			map = new google.maps.Map(document.getElementById('canvas-google'),
+			map = new google.maps.Map(document.getElementById('gps').getElementById('canvas-google'),
 					mapOptions);
 			var image = 'img/accelerometer.gif';
 			var myLatLng = new google.maps.LatLng(37.394414, -122.147795);
