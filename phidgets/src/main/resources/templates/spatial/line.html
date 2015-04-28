@@ -294,14 +294,6 @@ html, body, #canvas-google {
 			var legend = window.myLineMagnetic.generateLegend()
 			//and append it to your page somewhere
 			document.getElementById("magneticLegendDiv").innerHTML = legend;
-
-			var mapOptions = {
-				center : {
-					lat : 37,
-					lng : -122
-				},
-				zoom : 10
-			};
 			
 			var vibrationData = {
 				    labels: ["Vibration"],
@@ -371,6 +363,15 @@ html, body, #canvas-google {
 			var myBarChart = new Chart(ctx).Bar(vibrationData, options);
 			
 			//Google Maps for GPS plot
+			
+			var mapOptions = {
+				center : {
+					lat : 37,
+					lng : -122
+				},
+				zoom : 10
+			};
+			
 			map = new google.maps.Map(document.getElementById('canvas-google'),
 					mapOptions);
 			var image = 'img/accelerometer.gif';
