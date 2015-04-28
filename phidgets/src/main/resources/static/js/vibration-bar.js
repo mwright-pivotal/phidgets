@@ -2,7 +2,7 @@
  * 
  */
 
-var data = {
+var vibrationData = {
 	    labels: ["Vibration"],
 	    datasets: [
 	        {

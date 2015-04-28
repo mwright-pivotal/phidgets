@@ -281,6 +281,21 @@ html, body, #canvas-google {
 				zoom : 10
 			};
 			
+			var vibrationData = {
+				    labels: ["Vibration"],
+				    datasets: [
+				        {
+				            label: "Value",
+				            fillColor: "rgba(220,220,220,0.5)",
+				            strokeColor: "rgba(220,220,220,0.8)",
+				            highlightFill: "rgba(220,220,220,0.75)",
+				            highlightStroke: "rgba(220,220,220,1)",
+				            data: [65, 59, 80, 81, 56, 55, 40]
+				        }
+				    ]
+				};
+
+			
 			var ctx = document.getElementById("canvas-vibration").getContext("2d");
 			window.myBarVibration = new Chart(ctx).Line(vibrationData, {
 				responsive : false,
@@ -395,13 +410,11 @@ html, body, #canvas-google {
 				window.myLineMagnetic.addData([ x, y, z ], ts);
 				
 			} else if (eventDesc == "vibr") {
-				var x = parseFloat(eventFeatures.x);
-				var y = parseFloat(eventFeatures.y);
-				var z = parseFloat(eventFeatures.z);
+				var x = parseFloat(eventFeatures.value);
 				var ts = eventFeatures.rcvts;
 
 				window.myLineMagnetic.removeData()
-				window.myLineMagnetic.addData([ x, y, z ], ts);
+				window.myLineMagnetic.addData([ value ], ts);
 			} else if (eventDesc == "gps") {
 				var lat = parseFloat(eventFeatures.lat);
 				var long = parseFloat(eventFeatures.long);
